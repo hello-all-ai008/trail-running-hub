@@ -5,7 +5,9 @@ import {
   UserPlus, 
   Trophy, 
   History, 
-  MonitorPlay 
+  MonitorPlay,
+  Image as ImageIcon,
+  Settings2
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -28,6 +30,14 @@ export default function Sidebar() {
       <NavLink to="/import" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
         <UserPlus size={17} />
         <span className="label">เพิ่มข้อมูลนักวิ่ง</span>
+      </NavLink>
+      <NavLink to="/auto-bib" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
+        <ImageIcon size={17} />
+        <span className="label">Auto BIB</span>
+      </NavLink>
+      <NavLink to="/rebuild-bib" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
+        <Settings2 size={17} />
+        <span className="label">Rebuild BIB</span>
       </NavLink>
 
       <div className="nav-group">จุดสแกน</div>
@@ -58,6 +68,10 @@ export default function Sidebar() {
       <NavLink to="/live" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
         <MonitorPlay size={17} />
         <span className="label">Live Stream 🌟</span>
+      </NavLink>
+      <NavLink to="/monitor" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
+        <LayoutDashboard size={17} />
+        <span className="label">Category Monitor</span>
       </NavLink>
     </aside>
   );

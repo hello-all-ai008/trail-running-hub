@@ -10,6 +10,9 @@ import Results from './pages/Results';
 import ScanLog from './pages/ScanLog';
 import LiveStream from './pages/LiveStream';
 import Toast from './components/Toast';
+import AutoBibGenerator from './pages/AutoBibGenerator';
+import RebuildBib from './pages/RebuildBib';
+import Monitor from './pages/Monitor';
 
 function App() {
   return (
@@ -27,6 +30,9 @@ function App() {
           <Route path="/results" element={<Results />} />
           <Route path="/log" element={<ScanLog />} />
           <Route path="/live" element={<LiveStream />} />
+          <Route path="/monitor" element={<Monitor />} />
+          <Route path="/auto-bib" element={<AutoBibGenerator />} />
+          <Route path="/rebuild-bib" element={<RebuildBib />} />
         </Routes>
       </main>
       <Toast />

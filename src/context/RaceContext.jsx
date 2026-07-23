@@ -165,6 +165,19 @@ export function RaceProvider({ children }) {
     addToast(`✓ นำเข้าข้อมูลสำเร็จ ${newRunners.length} รายการ`);
   };
 
+  const assignNewBibs = (assignments) => {
+    setRunners(prev => {
+      const assignmentMap = new Map(assignments.map(a => [a.oldBib, a.newBib]));
+      return prev.map(r => {
+        if (assignmentMap.has(r.bib)) {
+          return { ...r, bib: assignmentMap.get(r.bib) };
+        }
+        return r;
+      });
+    });
+    addToast(`✓ อัพเดตหมายเลข BIB ใหม่ ${assignments.length} รายการ`);
+  };
+
   return (
     <RaceContext.Provider value={{
       runners,
@@ -174,7 +187,8 @@ export function RaceProvider({ children }) {
       addToast,
       getCpName,
       importRunners,
-      updateRunner
+      updateRunner,
+      assignNewBibs
     }}>
       {children}
     </RaceContext.Provider>
