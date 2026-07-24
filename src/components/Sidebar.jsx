@@ -102,7 +102,7 @@ export default function Sidebar() {
         </NavLink>
       </CollapsibleGroup>
 
-      <CollapsibleGroup title="รายงาน" defaultOpen={true} isSidebarCollapsed={isCollapsed}>
+      <CollapsibleGroup title="รายงาน" defaultOpen={false} isSidebarCollapsed={isCollapsed}>
         <NavLink to="/results" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
           <Trophy size={17} />
           <span className="label">ผลการแข่งขัน</span>
@@ -113,7 +113,7 @@ export default function Sidebar() {
         </NavLink>
       </CollapsibleGroup>
 
-      <CollapsibleGroup title="Live Screen" defaultOpen={true} isSidebarCollapsed={isCollapsed}>
+      <CollapsibleGroup title="Live Screen" defaultOpen={false} isSidebarCollapsed={isCollapsed}>
         <NavLink to="/live" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
           <MonitorPlay size={17} />
           <span className="label">Live Stream 🌟</span>
