@@ -11,23 +11,29 @@ import {
   Settings2,
   Database,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  PanelLeftClose,
+  PanelLeftOpen
 } from 'lucide-react';
 
-function CollapsibleGroup({ title, children, defaultOpen = true }) {
+function CollapsibleGroup({ title, children, defaultOpen = true, isSidebarCollapsed }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  
+  const showItems = isSidebarCollapsed ? true : isOpen;
 
   return (
     <div className="nav-group-container">
-      <div 
-        className="nav-group" 
-        onClick={() => setIsOpen(!isOpen)}
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', userSelect: 'none' }}
-      >
-        <span>{title}</span>
-        {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-      </div>
-      {isOpen && (
+      {!isSidebarCollapsed && (
+        <div 
+          className="nav-group" 
+          onClick={() => setIsOpen(!isOpen)}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', userSelect: 'none' }}
+        >
+          <span>{title}</span>
+          {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+        </div>
+      )}
+      {showItems && (
         <div className="nav-group-items">
           {children}
         </div>
@@ -37,14 +43,24 @@ function CollapsibleGroup({ title, children, defaultOpen = true }) {
 }
 
 export default function Sidebar() {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="logo">
         <div className="logo-mark">TT</div>
         <div><b>TrailTime</b><span>Race Timing System</span></div>
       </div>
       
-      <CollapsibleGroup title="ภาพรวม" defaultOpen={true}>
+      <button 
+        className="collapse-btn" 
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        title="ย่อ/ขยาย Sidebar"
+      >
+        {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+      </button>
+
+      <CollapsibleGroup title="ภาพรวม" defaultOpen={true} isSidebarCollapsed={isCollapsed}>
         <NavLink to="/dashboard" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
           <LayoutDashboard size={17} />
           <span className="label">แดชบอร์ด</span>
@@ -71,7 +87,7 @@ export default function Sidebar() {
         </NavLink>
       </CollapsibleGroup>
 
-      <CollapsibleGroup title="จุดสแกน" defaultOpen={true}>
+      <CollapsibleGroup title="จุดสแกน" defaultOpen={true} isSidebarCollapsed={isCollapsed}>
         <NavLink to="/checkin" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
           <span className="dot" style={{background: 'var(--start)'}}></span>
           <span className="label">Check-in (Start)</span>
@@ -86,7 +102,7 @@ export default function Sidebar() {
         </NavLink>
       </CollapsibleGroup>
 
-      <CollapsibleGroup title="รายงาน" defaultOpen={true}>
+      <CollapsibleGroup title="รายงาน" defaultOpen={true} isSidebarCollapsed={isCollapsed}>
         <NavLink to="/results" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
           <Trophy size={17} />
           <span className="label">ผลการแข่งขัน</span>
@@ -97,7 +113,7 @@ export default function Sidebar() {
         </NavLink>
       </CollapsibleGroup>
 
-      <CollapsibleGroup title="Live Screen" defaultOpen={true}>
+      <CollapsibleGroup title="Live Screen" defaultOpen={true} isSidebarCollapsed={isCollapsed}>
         <NavLink to="/live" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
           <MonitorPlay size={17} />
           <span className="label">Live Stream 🌟</span>
