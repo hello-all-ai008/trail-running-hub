@@ -7,7 +7,8 @@ import {
   History, 
   MonitorPlay,
   Image as ImageIcon,
-  Settings2
+  Settings2,
+  Database
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -38,6 +39,10 @@ export default function Sidebar() {
       <NavLink to="/rebuild-bib" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
         <Settings2 size={17} />
         <span className="label">Rebuild BIB</span>
+      </NavLink>
+      <NavLink to="/database-flow" className={({isActive}) => `nav-item ${isActive ? 'active' : ''}`}>
+        <Database size={17} />
+        <span className="label">Database Flow</span>
       </NavLink>
 
       <div className="nav-group">จุดสแกน</div>

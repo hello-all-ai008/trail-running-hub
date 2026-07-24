@@ -13,6 +13,7 @@ import Toast from './components/Toast';
 import AutoBibGenerator from './pages/AutoBibGenerator';
 import RebuildBib from './pages/RebuildBib';
 import Monitor from './pages/Monitor';
+import DatabaseFlow from './pages/DatabaseFlow';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/monitor" element={<Monitor />} />
           <Route path="/auto-bib" element={<AutoBibGenerator />} />
           <Route path="/rebuild-bib" element={<RebuildBib />} />
+          <Route path="/database-flow" element={<DatabaseFlow />} />
         </Routes>
       </main>
       <Toast />
