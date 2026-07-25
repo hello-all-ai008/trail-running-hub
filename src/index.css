@@ -137,13 +137,68 @@ select.search{flex:none;width:auto}
 .cam-modal #reader{width:100%;margin-top:12px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg-soft)}
 .cam-modal #reader button{border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--ink);margin:4px}
 
+.nav-group-items.closed {
+  display: none;
+}
+
 @media (max-width:960px){
   .station{grid-template-columns:1fr}
   .grid-4{grid-template-columns:repeat(2,1fr)}
   .sidebar{width:72px;padding:16px 8px}
-  .sidebar .label,.logo b,.logo span,.nav-group{display:none}
+  .sidebar .label,.logo b,.logo span,.nav-group{display:none !important}
+  .nav-group-items.closed { display: block !important; }
   .nav-item{justify-content:center;padding:11px}
   .main{padding:20px 16px 60px}
+}
+
+@media (max-width:768px){
+  .app { flex-direction: column; }
+  .sidebar { 
+    position: fixed; 
+    top: auto;
+    bottom: 0; 
+    left: 0; 
+    width: 100% !important; 
+    height: auto; 
+    flex-direction: row; 
+    padding: 8px 12px; 
+    overflow-x: auto; 
+    white-space: nowrap; 
+    border-right: none; 
+    border-top: 1px solid var(--line); 
+    align-items: center; 
+    z-index: 100;
+    background: var(--bg);
+  }
+  /* Hide scrollbar for sidebar on mobile */
+  .sidebar::-webkit-scrollbar { display: none; }
+  .logo, .collapse-btn, .nav-group { display: none !important; }
+  
+  .nav-group-container { display: contents; }
+  .nav-group-items, .nav-group-items.closed { display: contents !important; }
+  .nav-item { padding: 10px 14px; width: auto; justify-content: center; }
+  .nav-item svg { width: 22px; height: 22px; }
+  
+  .main { padding: 16px 12px 80px; }
+  
+  .grid-4, .grid-2 { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 80px 1fr 60px; }
+  .led { min-height: 180px; padding: 20px 16px; }
+  .led .bib { font-size: 32px; }
+  .scan-input { font-size: 18px; padding: 12px 12px 12px 42px; }
+  
+  .eslip { width: 100%; max-width: 320px; }
+  .toast { left: 16px; right: 16px; bottom: 80px; max-width: none; }
+  
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+  .monitor-layout { flex-direction: column; }
+  .monitor-sidebar { width: 100%; margin: 0; margin-bottom: 16px; }
+  .monitor-sidebar.collapsed { display: none; }
+  .cp-flow { flex-direction: column; }
+  
+  .bib-generator-layout { flex-direction: column !important; height: auto !important; gap: 1rem !important; }
+  .bib-generator-layout .settings-panel { flex: none !important; width: 100% !important; max-height: none !important; }
+  .bib-generator-layout .preview-panel { flex: none !important; min-height: 400px; height: auto; }
 }
 
 /* ========== Live Stream Anim ========== */

@@ -18,26 +18,20 @@ import {
 
 function CollapsibleGroup({ title, children, defaultOpen = true, isSidebarCollapsed }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
-  
-  const showItems = isSidebarCollapsed ? true : isOpen;
 
   return (
-    <div className="nav-group-container">
-      {!isSidebarCollapsed && (
-        <div 
-          className="nav-group" 
-          onClick={() => setIsOpen(!isOpen)}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', userSelect: 'none' }}
-        >
-          <span>{title}</span>
-          {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-        </div>
-      )}
-      {showItems && (
-        <div className="nav-group-items">
-          {children}
-        </div>
-      )}
+    <div className={`nav-group-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+      <div 
+        className="nav-group" 
+        onClick={() => setIsOpen(!isOpen)}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', userSelect: 'none' }}
+      >
+        <span>{title}</span>
+        {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+      </div>
+      <div className={`nav-group-items ${isOpen || isSidebarCollapsed ? 'open' : 'closed'}`}>
+        {children}
+      </div>
     </div>
   );
 }
