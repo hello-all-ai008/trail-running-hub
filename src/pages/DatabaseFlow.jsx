@@ -81,6 +81,17 @@ export default function DatabaseFlow() {
                     uuid event_id FK
                     uuid user_id FK "nullable (ถ้าสมัครแบบไม่สร้าง Account)"
                     string bib "nullable, UNIQUE ต่อ event"
+                    string title "คำนำหน้าชื่อ"
+                    string name "ชื่อนามสกุล"
+                    string gender "เพศ"
+                    string age "อายุตัวเลข (ถ้ามี)"
+                    string age_group "รุ่นอายุ"
+                    string cat "ข้อมูลระยะทางเดิม (Raw string)"
+                    float distance "ระยะทางที่แยกออกมา"
+                    string unit "หน่วยของระยะทาง"
+                    string cat_name "ชื่อรุ่น/ประเภทที่แยกออกมา"
+                    string nat "สัญชาติ"
+                    string payment_status "สถานะการชำระเงิน"
                     uuid category_id FK
                     string rfid_tag "nullable, map ตอนเช็คอิน"
                     string registration_status "PRE_REGISTERED|CHECKED_IN"
@@ -204,6 +215,17 @@ export default function DatabaseFlow() {
                   <tr><td><span className="code">event_id</span></td><td>UUID (FK)</td><td>ระบุว่าสมัครของงานวิ่งไหน (EVENTS.id)</td></tr>
                   <tr><td><span className="code">user_id</span></td><td>UUID (FK)</td><td>ข้อมูลนักวิ่งหลัก (nullable, กรณีสมัครแบบไม่สร้าง Account)</td></tr>
                   <tr><td><span className="code">bib</span></td><td>VARCHAR</td><td>หมายเลขบิบ (nullable, UNIQUE ต่อ event)</td></tr>
+                  <tr><td><span className="code">title</span></td><td>VARCHAR</td><td>คำนำหน้าชื่อ</td></tr>
+                  <tr><td><span className="code">name</span></td><td>VARCHAR</td><td>ชื่อนักวิ่ง</td></tr>
+                  <tr><td><span className="code">gender</span></td><td>VARCHAR</td><td>เพศ</td></tr>
+                  <tr><td><span className="code">age</span></td><td>VARCHAR</td><td>อายุ (ตัวเลข - ถ้ามี)</td></tr>
+                  <tr><td><span className="code">age_group</span></td><td>VARCHAR</td><td>รุ่นอายุ (ข้อความ)</td></tr>
+                  <tr><td><span className="code">cat</span></td><td>VARCHAR</td><td>ข้อมูลระยะทางเดิม (Raw string)</td></tr>
+                  <tr><td><span className="code">distance</span></td><td>FLOAT</td><td>ระยะทาง (เช่น 10) ที่สกัดออกมาจากไฟล์</td></tr>
+                  <tr><td><span className="code">unit</span></td><td>VARCHAR</td><td>หน่วย (เช่น KM) ที่สกัดออกมาจากไฟล์</td></tr>
+                  <tr><td><span className="code">cat_name</span></td><td>VARCHAR</td><td>ชื่อรุ่น (เช่น Hard Rock) ที่สกัดออกมาจากไฟล์</td></tr>
+                  <tr><td><span className="code">nat</span></td><td>VARCHAR</td><td>สัญชาติ</td></tr>
+                  <tr><td><span className="code">payment_status</span></td><td>VARCHAR</td><td>สถานะการชำระเงิน</td></tr>
                   <tr><td><span className="code">category_id</span></td><td>UUID (FK)</td><td>รหัสระยะทางที่เลือกลง (อ้างอิง CATEGORIES)</td></tr>
                   <tr><td><span className="code">rfid_tag</span></td><td>VARCHAR</td><td>รหัสชิป RFID (nullable, map ตอนเช็คอิน)</td></tr>
                   <tr><td><span className="code">registration_status</span></td><td>ENUM</td><td>PRE_REGISTERED | CHECKED_IN</td></tr>
