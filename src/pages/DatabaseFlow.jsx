@@ -138,6 +138,19 @@ export default function DatabaseFlow() {
                     timestamp updated_at
                 }
 
+                ADMIN_USERS {
+                    uuid id PK "รหัสผู้ดูแลระบบ"
+                    string name "ชื่อผู้มีสิทธิ์"
+                    string pin "รหัสส่วนตัว (PIN) 4-6 หลัก"
+                }
+
+                ACTION_LOGS {
+                    uuid id PK "รหัสการบันทึกประวัติ"
+                    uuid admin_id FK "อ้างอิงคนที่ทำรายการ"
+                    string action_type "เช่น REBUILD_BIB, DELETE_DATA"
+                    timestamp created_at "เวลาที่ทำรายการ"
+                }
+
                 EVENTS ||--o{ CATEGORIES : "has_categories"
                 EVENTS ||--o{ STATIONS : "has_stations"
                 EVENTS ||--o{ LOCATIONS : "has_locations"
@@ -148,7 +161,8 @@ export default function DatabaseFlow() {
                 STATIONS ||--o{ SCAN_LOGS : "records"
                 LOCATIONS ||--o{ SCAN_LOGS : "happens_at"
                 CATEGORIES ||--o{ CHECKPOINT : "defines_route"
-                STATIONS ||--o{ CHECKPOINT : "used_in"`}
+                STATIONS ||--o{ CHECKPOINT : "used_in"
+                ADMIN_USERS ||--o{ ACTION_LOGS : "performs"`}
           </div>
 
           <h2>2. Table Structures</h2>
@@ -270,6 +284,29 @@ export default function DatabaseFlow() {
                   <tr><td><span className="code">note</span></td><td>VARCHAR</td><td>หมายเหตุเพิ่มเติม</td></tr>
                   <tr><td><span className="code">created_at</span></td><td>TIMESTAMP</td><td>เวลาที่สร้างข้อมูล</td></tr>
                   <tr><td><span className="code">updated_at</span></td><td>TIMESTAMP</td><td>เวลาที่อัปเดตข้อมูลล่าสุด</td></tr>
+              </tbody>
+          </table>
+
+          <h3>2.9 ADMIN_USERS (ผู้ดูแลระบบ) <span className="badge">NEW</span></h3>
+          <p style={{ fontSize: '14px', color: '#555' }}>เก็บข้อมูลผู้ดูแลระบบและรหัส PIN สำหรับยืนยันตัวตนทำรายการสำคัญ (เช่น Rebuild BIB หรือลบข้อมูล)</p>
+          <table>
+              <tbody>
+                  <tr><th>Field Name</th><th>Data Type</th><th>Description</th></tr>
+                  <tr><td><span className="code">id</span></td><td>UUID (PK)</td><td>รหัสผู้ดูแลระบบ</td></tr>
+                  <tr><td><span className="code">name</span></td><td>VARCHAR</td><td>ชื่อผู้ดูแลระบบ</td></tr>
+                  <tr><td><span className="code">pin</span></td><td>VARCHAR</td><td>รหัสส่วนตัว (PIN) 4-6 หลัก</td></tr>
+              </tbody>
+          </table>
+
+          <h3>2.10 ACTION_LOGS (ประวัติการทำรายการสำคัญ) <span className="badge">NEW</span></h3>
+          <p style={{ fontSize: '14px', color: '#555' }}>เก็บประวัติเมื่อมีการทำงานสำคัญๆ เพื่อใช้ตรวจสอบย้อนหลังว่าใครเป็นคนทำรายการ</p>
+          <table>
+              <tbody>
+                  <tr><th>Field Name</th><th>Data Type</th><th>Description</th></tr>
+                  <tr><td><span className="code">id</span></td><td>UUID (PK)</td><td>รหัสประวัติ</td></tr>
+                  <tr><td><span className="code">admin_id</span></td><td>UUID (FK)</td><td>อ้างอิงผู้ดูแลระบบ (ADMIN_USERS.id)</td></tr>
+                  <tr><td><span className="code">action_type</span></td><td>VARCHAR</td><td>ประเภทของรายการ (เช่น REBUILD_BIB, DELETE_DATA)</td></tr>
+                  <tr><td><span className="code">created_at</span></td><td>TIMESTAMP</td><td>วันเวลาที่ทำรายการ</td></tr>
               </tbody>
           </table>
 
