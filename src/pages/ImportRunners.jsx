@@ -111,109 +111,174 @@ export default function ImportRunners() {
     }
   };
 
+  // Active tab state
+  const [activeTab, setActiveTab] = useState('excel'); // 'excel' | 'manual'
+
   return (
     <div className="page active">
-      <div className="page-head">
-        <span className="eyebrow">Data Management</span>
-        <h1>เพิ่มข้อมูลนักวิ่ง (Import / Add)</h1>
-        <p>เพิ่มนักวิ่งรายบุคคลแบบแมนนวล หรืออัปโหลดไฟล์ Excel เพื่อนำเข้าข้อมูลทีละหลายคน</p>
+      <div className="page-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+        <div>
+          <span className="eyebrow">Data Management</span>
+          <h1 style={{ marginBottom: '4px' }}>เพิ่มข้อมูลนักวิ่ง (Import / Add)</h1>
+          <p style={{ margin: 0, fontSize: '0.9rem' }}>เพิ่มนักวิ่งรายบุคคลแบบแมนนวล หรืออัปโหลดไฟล์ Excel เพื่อนำเข้าข้อมูลทีละหลายคน</p>
+        </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-        <div className="card card-pad" style={{ 
-          flex: isManualOpen ? '1' : '0 0 auto', 
-          width: isManualOpen ? '50%' : 'auto',
-          minWidth: isManualOpen ? 'auto' : '200px',
-          transition: 'all 0.3s ease' 
-        }}>
-          <div 
-            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', marginBottom: isManualOpen ? '14px' : '0' }} 
-            onClick={() => setIsManualOpen(!isManualOpen)}
+      {/* ── Toolbar: tab buttons ── */}
+      <div className="card" style={{ padding: '8px 12px', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setActiveTab('excel')}
+            style={{
+              padding: '8px 16px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+              fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px',
+              background: activeTab === 'excel' ? 'var(--ink)' : 'transparent',
+              color: activeTab === 'excel' ? '#fff' : 'var(--ink-2)',
+              transition: 'all .15s',
+            }}
           >
-            <div>
-              <span className="eyebrow">Manual Entry</span>
-              <h2 style={{fontSize: '16px', margin: '8px 0 0 0'}}>เพิ่มรายบุคคล</h2>
-            </div>
-            <button type="button" className="btn" style={{ padding: '4px 12px', fontSize: '12px' }}>
-              {isManualOpen ? '▼ ย่อลง' : '▶ ขยาย'}
+            📄 นำเข้าจาก Excel
+          </button>
+          <button
+            onClick={() => setActiveTab('manual')}
+            style={{
+              padding: '8px 16px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+              fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px',
+              background: activeTab === 'manual' ? 'var(--ink)' : 'transparent',
+              color: activeTab === 'manual' ? '#fff' : 'var(--ink-2)',
+              transition: 'all .15s',
+            }}
+          >
+            ✍️ เพิ่มแบบ Manual
+          </button>
+        </div>
+      </div>
+
+      {/* ── Tab: Excel Import ── */}
+      {activeTab === 'excel' && (
+        <div className="card card-pad" style={{ width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '18px', margin: 0 }}>อัปโหลดไฟล์ Excel</h2>
+            {data.length > 0 && (
+              <button className="btn" style={{ background: 'var(--primary)', color: '#000', display: 'flex', alignItems: 'center', gap: '6px' }} onClick={handleConfirmUpload}>
+                ✅ ยืนยันการบันทึกข้อมูล ({data.length})
+              </button>
+            )}
+          </div>
+
+          <div style={{ border: '2px dashed var(--line)', borderRadius: '12px', padding: '40px 20px', textAlign: 'center', color: 'var(--ink-2)', background: 'var(--bg-soft)', transition: 'all 0.2s', cursor: 'pointer' }} onClick={() => document.getElementById('file-excel').click()}>
+            <div style={{ fontSize: '3rem', marginBottom: '10px', opacity: 0.5 }}>📁</div>
+            <p style={{ margin: '0 0 12px 0', fontSize: '15px', fontWeight: 500, color: 'var(--ink)' }}>คลิกเพื่อเลือกไฟล์ Excel (.xlsx / .xls)</p>
+            <p style={{ margin: '0 0 16px 0', fontSize: '13px', opacity: 0.8 }}>รองรับไฟล์ตารางรายชื่อนักวิ่งที่มีหัวคอลัมน์ชัดเจน</p>
+            <input type="file" id="file-excel" accept=".xlsx,.xls" style={{ display: 'none' }} onChange={handleExcelUpload} />
+            <button className="btn" style={{ background: 'var(--border)', color: 'var(--ink)' }} onClick={(e) => { e.stopPropagation(); document.getElementById('file-excel').click(); }}>
+              เลือกไฟล์ Excel
             </button>
           </div>
           
-          {isManualOpen && (
-            <form style={{display: 'flex', flexDirection: 'column', gap: '12px'}} onSubmit={handleManualSubmit}>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
-                <input type="text" className="search" name="bib" value={formData.bib} onChange={handleChange} placeholder="BIB (เช่น 1001)" required />
-                <input type="text" className="search" name="cat" value={formData.cat} onChange={handleChange} placeholder="ระยะ (เช่น MKT10)" required />
+          {msg && (
+            <div style={{ marginTop: '15px', padding: '12px', background: 'var(--bg-soft)', borderRadius: '8px', borderLeft: '4px solid var(--primary)', fontSize: '0.9rem', fontWeight: 500 }}>
+              {msg}
+            </div>
+          )}
+
+          {data.length > 0 && (
+            <div style={{ overflowX: 'auto', marginTop: '20px', border: '1px solid var(--line)', borderRadius: '8px' }}>
+              <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '13px' }}>
+                <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                  <tr>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>NO</th>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>Title</th>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>Name</th>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>Gender</th>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>Age Group</th>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>Distance</th>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>Unit</th>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>Category</th>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>Status</th>
+                    <th style={{ borderBottom: '1px solid var(--line)', background: 'var(--bg-soft)', padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)' }}>Nat</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((row, idx) => (
+                    <tr key={idx} style={{ background: idx % 2 === 0 ? 'transparent' : 'var(--bg-soft)', transition: 'background 0.1s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--line)'} onMouseOut={(e) => e.currentTarget.style.background = idx % 2 === 0 ? 'transparent' : 'var(--bg-soft)'}>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px' }}>{row.bib}</td>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px', color: 'var(--ink-2)' }}>{row.title}</td>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px', fontWeight: 500 }}>{row.name}</td>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px' }}>{row.gender}</td>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px' }}>{row.age_group}</td>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px' }}>{row.distance}</td>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px', color: 'var(--ink-2)' }}>{row.unit}</td>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px' }}>{row.cat_name}</td>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px' }}>
+                        <span style={{ padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600, background: row.payment_status?.toLowerCase().includes('paid') ? '#dcfce7' : 'var(--border)', color: row.payment_status?.toLowerCase().includes('paid') ? '#166534' : 'var(--ink)' }}>
+                          {row.payment_status || 'N/A'}
+                        </span>
+                      </td>
+                      <td style={{ borderBottom: '1px solid var(--line)', padding: '10px 12px', color: 'var(--ink-2)' }}>{row.nat}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Tab: Manual Entry ── */}
+      {activeTab === 'manual' && (
+        <div className="card card-pad" style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '18px', margin: '0 0 8px 0' }}>เพิ่มรายบุคคล</h2>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--ink-2)' }}>กรอกข้อมูลนักวิ่งเพื่อเพิ่มเข้าสู่ระบบโดยตรง</p>
+          </div>
+          
+          <form style={{ display: 'flex', flexDirection: 'column', gap: '16px' }} onSubmit={handleManualSubmit}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '4px', fontWeight: 500, color: 'var(--ink)' }}>BIB <span style={{color: 'var(--warn)'}}>*</span></label>
+                <input type="text" className="search" name="bib" value={formData.bib} onChange={handleChange} placeholder="เช่น 1001" required style={{ width: '100%', padding: '10px' }} />
               </div>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
-                <input type="text" className="search" name="name" value={formData.name} onChange={handleChange} placeholder="ชื่อ-นามสกุล" required />
-                <select className="search" name="gender" value={formData.gender} onChange={handleChange} required>
-                  <option value="" disabled>เพศ</option>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '4px', fontWeight: 500, color: 'var(--ink)' }}>ระยะทาง (Category) <span style={{color: 'var(--warn)'}}>*</span></label>
+                <input type="text" className="search" name="cat" value={formData.cat} onChange={handleChange} placeholder="เช่น MKT10" required style={{ width: '100%', padding: '10px' }} />
+              </div>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '4px', fontWeight: 500, color: 'var(--ink)' }}>ชื่อ-นามสกุล <span style={{color: 'var(--warn)'}}>*</span></label>
+                <input type="text" className="search" name="name" value={formData.name} onChange={handleChange} placeholder="สมชาย ใจดี" required style={{ width: '100%', padding: '10px' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '4px', fontWeight: 500, color: 'var(--ink)' }}>เพศ <span style={{color: 'var(--warn)'}}>*</span></label>
+                <select className="search" name="gender" value={formData.gender} onChange={handleChange} required style={{ width: '100%', padding: '10px' }}>
+                  <option value="" disabled>เลือกเพศ</option>
                   <option value="M">ชาย (Male)</option>
                   <option value="F">หญิง (Female)</option>
                 </select>
               </div>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
-                <input type="text" className="search" name="age" value={formData.age} onChange={handleChange} placeholder="รุ่นอายุ (เช่น 20-29)" />
-                <input type="text" className="search" name="nat" value={formData.nat} onChange={handleChange} placeholder="สัญชาติ (เช่น THAI)" />
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '4px', fontWeight: 500, color: 'var(--ink)' }}>รุ่นอายุ (Age Group)</label>
+                <input type="text" className="search" name="age" value={formData.age} onChange={handleChange} placeholder="เช่น 20-29" style={{ width: '100%', padding: '10px' }} />
               </div>
-              <button type="submit" className="btn btn-dark" style={{marginTop: '8px'}}>บันทึกข้อมูลนักวิ่ง</button>
-            </form>
-          )}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '4px', fontWeight: 500, color: 'var(--ink)' }}>สัญชาติ (Nationality)</label>
+                <input type="text" className="search" name="nat" value={formData.nat} onChange={handleChange} placeholder="เช่น THAI" style={{ width: '100%', padding: '10px' }} />
+              </div>
+            </div>
+            
+            <div style={{ marginTop: '1rem' }}>
+              <button type="submit" className="btn" style={{ width: '100%', background: 'var(--ink)', color: '#fff', padding: '12px', fontSize: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                ✍️ บันทึกข้อมูลนักวิ่ง
+              </button>
+            </div>
+          </form>
         </div>
-
-
-{/* Bulk Excel Import */}
-<div className="card card-pad" style={{ flex: '1', width: '100%', marginBottom: '20px' }}>
-  <span className="eyebrow">Bulk Excel Import</span>
-  <h2 style={{ fontSize: '16px', marginBottom: '14px', marginTop: '8px' }}>อัปโหลดไฟล์ Excel</h2>
-  <div style={{ border: '2px dashed var(--line)', borderRadius: '12px', padding: '30px', textAlign: 'center', color: 'var(--ink-2)', background: 'var(--bg-soft)' }}>
-    <p style={{ marginBottom: '12px', fontSize: '14px' }}>คลิกเพื่อเลือกไฟล์ Excel (.xlsx / .xls)</p>
-    <input type="file" id="file-excel" accept=".xlsx,.xls" style={{ display: 'none' }} onChange={handleExcelUpload} />
-    <button className="btn" onClick={() => document.getElementById('file-excel').click()}>เลือกไฟล์ Excel</button>
-  </div>
-  {msg && <p style={{ color: '#2d3748', marginTop: '15px' }}>{msg}</p>}
-  {data.length > 0 && (
-    <div style={{ overflowX: 'auto', marginTop: '20px' }}>
-      <div style={{ textAlign: 'right', marginBottom: '15px' }}>
-        <button className="btn btn-dark" onClick={handleConfirmUpload}>✅ ยืนยันการบันทึกข้อมูลลง Database</button>
-      </div>
-      <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '14px', marginBottom: '20px' }}>
-        <thead>
-          <tr>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>NO (ลำดับ)</th>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>Title</th>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>Name</th>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>Gender</th>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>Age Group</th>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>Distance</th>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>Unit</th>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>Category Name</th>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>Status</th>
-            <th style={{ border: '1px solid #e6e9ed', background: '#f7f8f9', padding: '12px', textAlign: 'left' }}>Nat</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, idx) => (
-            <tr key={idx}>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.bib}</td>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.title}</td>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.name}</td>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.gender}</td>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.age_group}</td>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.distance}</td>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.unit}</td>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.cat_name}</td>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.payment_status}</td>
-              <td style={{ border: '1px solid #e6e9ed', padding: '12px' }}>{row.nat}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )}
-</div>
-      </div>
+      )}
     </div>
   );
 }
